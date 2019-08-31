@@ -1,0 +1,6 @@
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+kubernetesVersion: stable
+controlPlaneEndpoint: "***.***.***.***:8282"  ## this should be the IP and Port on which TCP load Balancer is listening on
+networking:
+  podSubnet: "10.244.0.0/16"

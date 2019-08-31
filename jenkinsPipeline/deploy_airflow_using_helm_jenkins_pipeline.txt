@@ -1,0 +1,25 @@
+pipeline 
+{
+  agent 
+  {
+      label 'K8SlaveNode'
+  }
+  stages 
+  {
+    stage('clean workspace') 
+    {
+     steps
+		{
+         step([$class: 'WsCleanup'])
+        }
+     }   
+	stage('deploy using helm files') 
+	{
+      steps 
+	  {
+         sh 'helm install stable/airflow --tiller-namespace airflow --namespace airflow --name airflow'
+         sh 'helm ls --all airflow --tiller-namespace airflow'
+      }
+    }
+  }
+}

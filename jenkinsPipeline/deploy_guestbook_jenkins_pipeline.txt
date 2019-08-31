@@ -1,0 +1,51 @@
+pipeline 
+{
+  agent 
+  {
+      label 'K8SlaveNode'
+  }
+  stages 
+  {
+    stage('clean workspace') 
+    {
+     steps
+		{
+         step([$class: 'WsCleanup'])
+        }
+     }   
+    stage('git clone') 
+	{
+      steps 
+	       {
+			sh 'mkdir -p kubernetes_repo guestbook_repo'
+			dir('kubernetes_repo') 
+				{
+					git credentialsId: 'f3e2bfb8-ac30-48a7-80f4-3176dab22f81', 
+						url: 'https://github.com/kewaltyagi/kubernetes_project.git'
+				}
+			dir('guestbook_repo') 
+				{
+					git  url: 'https://github.com/kubernetes/examples.git'
+				}
+			}
+    }
+	stage('add namespace to yaml files') 
+	{
+      steps 
+	  {
+	     dir("${env.WORKSPACE}/")
+		 {
+			 sh 'for file in guestbook_repo/guestbook/*.yaml; do echo $file; sed -i "/^  name:.*/a \\ \\ namespace: development" $file; done'
+		 }
+      }
+    }
+	stage('deploy yaml files') 
+	{
+      steps 
+	  {
+         kubernetesDeploy configs: 'kubernetes_repo/deployGuestbook/*.yaml', kubeconfigId: 'K8Cluster'
+		 kubernetesDeploy configs: 'guestbook_repo/guestbook/*.yaml', kubeconfigId: 'K8Cluster'
+      }
+    }
+  }
+}
