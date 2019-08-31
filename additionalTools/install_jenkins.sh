@@ -25,4 +25,4 @@ sudo apt-get install default-jre
 ## Add unix credentials for ssh connection to Jenkins Slave host will be using in Slave node setup
 ## Setup Node in Jenkins UI (see image jenkins_slave_node_config.png)
 
-## Install "Deploy to Kubernetes" jenkin plugin and configre K8 Cluster connection
+## Install "Deploy to Kubernetes" jenkin plugin and configre K8 Cluster connection. See image k8_credential_setup.png
